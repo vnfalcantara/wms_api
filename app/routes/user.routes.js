@@ -1,62 +1,14 @@
-const UserController = require('../controllers/user.controller')
-const user = new UserController()
-const { userValidation, idValidation } = require('../validation')
+const UserController = require("../controllers/user.controller");
+const user = new UserController();
 
-module.exports = scope => {
+module.exports = (scope) => {
+  const { app } = scope;
+  const basePath = "/user";
 
-  const { app, passportJWT } = scope
-  const basePath = '/user'
-
-  app.post(
-    `${basePath}/login`,
-    userValidation.login,
-    user.login
-  )
-
-  app.get(
-    `${basePath}/profile`,
-    passportJWT.authenticate(),
-    user.profile
-  )
-
-  app.post(
-    basePath,
-    passportJWT.authenticate(),
-    userValidation.create,
-    user.insert
-  )
-
-  app.get(
-    basePath,
-    passportJWT.authenticate(),
-    user.find
-  )
-
-  app.get(
-    `${basePath}/count`,
-    passportJWT.authenticate(),
-    user.count
-  )
-
-  app.get(
-    `${basePath}/:id`,
-    passportJWT.authenticate(),
-    idValidation,
-    user.findOne
-  )
-
-  app.put(
-    `${basePath}/:id`,
-    passportJWT.authenticate(),
-    idValidation,
-    user.update
-  )
-
-  app.delete(
-    `${basePath}/:id`,
-    passportJWT.authenticate(),
-    idValidation,
-    user.remove
-  )
-
-}
+  app.post(basePath, user.insert); // INSERE DADO
+  app.get(basePath, user.find); // BUSCA TODOS OS DADOS
+  app.get(`${basePath}/count`, user.count); // CONTA QUANTOS DADOS TEM
+  app.get(`${basePath}/:id`, user.findOne); // BUSCA DADO DE UM USUARIO
+  app.put(`${basePath}/:id`, user.update); // ATUALIZA UM USUARIO
+  app.delete(`${basePath}/:id`, user.remove); // REMOVE UM USUARIO
+};
